@@ -1,0 +1,534 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>パスタ太郎 - パスタpedia</title>
+  <style>
+    :root {
+      --bg-page: #f8f9fa;
+      --bg-content: #ffffff;
+      --bg-box: #f8f9fa;
+      --border-color: #a2a9b1;
+      --border-light: #eaecf0;
+      --text-main: #202122;
+      --text-muted: #54595d;
+      --link-color: #3366cc;
+      --link-hover: #2a4b8d;
+      --infobox-header: #e8cfa6;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      padding: 0;
+      background-color: var(--bg-page);
+      color: var(--text-main);
+      font-family: -apple-system, BlinkMacSystemFont, "Hiragino Kaku Gothic ProN", "Hiragino Sans", Meiryo, sans-serif;
+      line-height: 1.65;
+      font-size: 16px;
+    }
+
+    /* ヘッダーバー */
+    .site-header {
+      background-color: var(--bg-content);
+      border-bottom: 1px solid var(--border-light);
+      padding: 12px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .site-logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      text-decoration: none;
+      color: var(--text-main);
+    }
+
+    .site-logo-title {
+      font-family: "Hiragino Mincho ProN", "Yu Mincho", Georgia, serif;
+      font-size: 1.35rem;
+      font-weight: bold;
+      letter-spacing: 0.05em;
+    }
+
+    .site-logo-sub {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      display: block;
+    }
+
+    /* メインコンテナ */
+    .page-container {
+      max-width: 1040px;
+      margin: 0 auto;
+      background-color: var(--bg-content);
+      border-left: 1px solid var(--border-light);
+      border-right: 1px solid var(--border-light);
+      border-bottom: 1px solid var(--border-light);
+      padding: 24px 32px 48px;
+    }
+
+    /* 記事タイトル */
+    .article-header {
+      border-bottom: 1px solid var(--border-color);
+      padding-bottom: 6px;
+      margin-bottom: 8px;
+    }
+
+    .article-title {
+      font-family: "Hiragino Mincho ProN", "Yu Mincho", Georgia, serif;
+      font-size: 1.9rem;
+      font-weight: normal;
+      margin: 0;
+      line-height: 1.3;
+    }
+
+    .article-subtitle {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      margin-bottom: 18px;
+    }
+
+    /* インフォボックス（右側の基礎情報表） */
+    .infobox {
+      float: right;
+      clear: right;
+      width: 290px;
+      margin: 0 0 18px 24px;
+      background-color: var(--bg-box);
+      border: 1px solid var(--border-color);
+      font-size: 0.88rem;
+      line-height: 1.5;
+    }
+
+    .infobox-title {
+      background-color: var(--infobox-header);
+      text-align: center;
+      font-weight: bold;
+      font-size: 1.05rem;
+      padding: 8px;
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    .infobox-image {
+      padding: 12px 12px 8px;
+      text-align: center;
+      background-color: #ffffff;
+      border-bottom: 1px solid var(--border-light);
+    }
+
+    .infobox-image svg {
+      width: 100%;
+      max-width: 240px;
+      height: auto;
+      display: block;
+      margin: 0 auto;
+      border: 1px solid var(--border-light);
+      border-radius: 4px;
+    }
+
+    .infobox-caption {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      margin-top: 6px;
+    }
+
+    .infobox table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    .infobox th,
+    .infobox td {
+      padding: 7px 10px;
+      border-top: 1px solid var(--border-light);
+      vertical-align: top;
+      text-align: left;
+    }
+
+    .infobox th {
+      width: 36%;
+      font-weight: bold;
+      color: var(--text-main);
+    }
+
+    /* 目次 */
+    .toc {
+      display: inline-block;
+      background-color: var(--bg-box);
+      border: 1px solid var(--border-color);
+      padding: 12px 18px;
+      margin: 12px 0 20px;
+      min-width: 220px;
+      font-size: 0.92rem;
+    }
+
+    .toc-title {
+      font-weight: bold;
+      text-align: center;
+      margin-bottom: 8px;
+    }
+
+    .toc ul {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+    }
+
+    .toc li {
+      margin: 4px 0;
+    }
+
+    .toc a {
+      color: var(--link-color);
+      text-decoration: none;
+    }
+
+    .toc a:hover {
+      text-decoration: underline;
+      color: var(--link-hover);
+    }
+
+    .toc-num {
+      color: var(--text-main);
+      margin-right: 6px;
+    }
+
+    /* 見出し・本文 */
+    h2 {
+      font-family: "Hiragino Mincho ProN", "Yu Mincho", Georgia, serif;
+      font-size: 1.45rem;
+      font-weight: normal;
+      border-bottom: 1px solid var(--border-color);
+      padding-bottom: 4px;
+      margin: 28px 0 12px;
+      overflow: hidden;
+    }
+
+    h3 {
+      font-size: 1.12rem;
+      font-weight: bold;
+      margin: 20px 0 8px;
+    }
+
+    p {
+      margin: 0 0 14px;
+    }
+
+    ul.wiki-list {
+      margin: 0 0 16px;
+      padding-left: 24px;
+    }
+
+    ul.wiki-list li {
+      margin-bottom: 6px;
+    }
+
+    /* サムネイル画像ボックス（本文内） */
+    .thumb-right {
+      float: right;
+      clear: right;
+      width: 250px;
+      margin: 4px 0 16px 20px;
+      background-color: var(--bg-box);
+      border: 1px solid var(--border-color);
+      padding: 6px;
+      font-size: 0.82rem;
+      color: var(--text-muted);
+    }
+
+    .thumb-right svg {
+      width: 100%;
+      height: auto;
+      display: block;
+      background-color: #ffffff;
+      border: 1px solid var(--border-light);
+    }
+
+    .thumb-caption {
+      padding-top: 6px;
+      line-height: 1.4;
+    }
+
+    /* 注意ボックス（粉チーズの件） */
+    .notice-box {
+      background-color: #fef6e7;
+      border: 1px solid #fc3;
+      border-left: 5px solid #fc3;
+      padding: 10px 14px;
+      margin: 14px 0 18px;
+      font-size: 0.94rem;
+    }
+
+    .notice-title {
+      font-weight: bold;
+      margin-bottom: 4px;
+    }
+
+    /* クリアフィックス */
+    .clearfix::after {
+      content: "";
+      display: table;
+      clear: both;
+    }
+
+    /* カテゴリ枠 */
+    .categories {
+      margin-top: 36px;
+      padding: 10px 14px;
+      background-color: var(--bg-box);
+      border: 1px solid var(--border-color);
+      font-size: 0.88rem;
+      clear: both;
+    }
+
+    .categories-label {
+      font-weight: bold;
+      margin-right: 8px;
+    }
+
+    .category-tag {
+      display: inline-block;
+      color: var(--link-color);
+      margin-right: 12px;
+    }
+
+    /* レスポンシブ対応（狭い画面） */
+    @media (max-width: 720px) {
+      .site-header {
+        padding: 10px 16px;
+      }
+
+      .page-container {
+        padding: 16px 16px 36px;
+        border-left: none;
+        border-right: none;
+      }
+
+      .article-title {
+        font-size: 1.55rem;
+      }
+
+      .infobox {
+        float: none;
+        width: 100%;
+        margin: 0 0 20px 0;
+      }
+
+      .thumb-right {
+        float: none;
+        width: 100%;
+        max-width: 340px;
+        margin: 12px auto 18px;
+      }
+
+      .toc {
+        display: block;
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <header class="site-header">
+    <a href="#" class="site-logo">
+      <svg width="32" height="32" viewBox="0 0 32 32" aria-hidden="true">
+        <circle cx="16" cy="16" r="14" fill="#f8f9fa" stroke="#a2a9b1" stroke-width="1.5"/>
+        <path d="M8 19 C11 11, 21 11, 24 19" fill="none" stroke="#e0a938" stroke-width="2.5" stroke-linecap="round"/>
+        <path d="M9 21 C12 14, 20 14, 23 21" fill="none" stroke="#d9534f" stroke-width="2" stroke-linecap="round"/>
+        <ellipse cx="16" cy="22" rx="9" ry="2.5" fill="none" stroke="#54595d" stroke-width="1.5"/>
+      </svg>
+      <div>
+        <span class="site-logo-title">パスタpedia</span>
+        <span class="site-logo-sub">同級生向け自己紹介百科事典</span>
+      </div>
+    </a>
+  </header>
+
+  <main class="page-container clearfix">
+    <div class="article-header">
+      <h1 class="article-title">パスタ太郎</h1>
+    </div>
+    <div class="article-subtitle">出典: 同級生向け自己紹介百科事典『パスタpedia』</div>
+
+    <!-- インフォボックス -->
+    <aside class="infobox" aria-label="基本情報">
+      <div class="infobox-title">パスタ太郎</div>
+      <div class="infobox-image">
+        <!-- SVGイラスト1：ボロネーゼ／ナポリタン風パスタと粉チーズ -->
+        <svg viewBox="0 0 260 180" role="img" aria-label="お皿に盛られたソースと粉チーズのかかったパスタのイラスト">
+          <rect width="260" height="180" fill="#fcfaf5"/>
+          <!-- お皿の影と本体 -->
+          <ellipse cx="130" cy="134" rx="108" ry="28" fill="#e2e5e9"/>
+          <ellipse cx="130" cy="130" rx="106" ry="26" fill="#ffffff" stroke="#b8bec5" stroke-width="2"/>
+          <ellipse cx="130" cy="130" rx="82" ry="18" fill="none" stroke="#e6e9ed" stroke-width="1.5"/>
+          <!-- 麺のベース -->
+          <path d="M62 126 C62 84, 198 84, 198 126 Z" fill="#f3c65f"/>
+          <!-- 麺の曲線 -->
+          <path d="M68 122 C85 95, 115 95, 132 122" fill="none" stroke="#d99b26" stroke-width="3" stroke-linecap="round"/>
+          <path d="M95 124 C115 90, 150 90, 170 124" fill="none" stroke="#e5ad3b" stroke-width="3.5" stroke-linecap="round"/>
+          <path d="M125 123 C145 96, 175 96, 192 122" fill="none" stroke="#d99b26" stroke-width="3" stroke-linecap="round"/>
+          <path d="M80 114 C105 86, 155 86, 180 114" fill="none" stroke="#f7d57c" stroke-width="3" stroke-linecap="round"/>
+          <!-- ボロネーゼ・ナポリタンソース -->
+          <path d="M84 106 C100 88, 160 88, 176 106 C172 116, 88 116, 84 106 Z" fill="#c83e2b"/>
+          <circle cx="112" cy="102" r="4" fill="#8f2416"/>
+          <circle cx="134" cy="99" r="5" fill="#8f2416"/>
+          <circle cx="150" cy="104" r="3.5" fill="#8f2416"/>
+          <circle cx="122" cy="108" r="3" fill="#a82c1c"/>
+          <!-- 必須の粉チーズ -->
+          <circle cx="116" cy="94" r="1.8" fill="#fffdf5"/>
+          <circle cx="125" cy="92" r="2" fill="#fffdf5"/>
+          <circle cx="132" cy="95" r="1.7" fill="#fffdf5"/>
+          <circle cx="140" cy="93" r="2.1" fill="#fffdf5"/>
+          <circle cx="128" cy="100" r="1.8" fill="#fffdf5"/>
+          <circle cx="137" cy="101" r="1.6" fill="#fffdf5"/>
+          <circle cx="120" cy="101" r="1.7" fill="#fffdf5"/>
+          <!-- パセリ -->
+          <circle cx="130" cy="90" r="3" fill="#4c9a2a"/>
+          <circle cx="134" cy="91" r="2.2" fill="#3b7a20"/>
+          <!-- 右上の粉チーズボトル -->
+          <g transform="translate(202, 22) rotate(12)">
+            <rect x="4" y="10" width="24" height="38" rx="3" fill="#f2efe6" stroke="#8c887e" stroke-width="1.5"/>
+            <rect x="3" y="4" width="26" height="7" rx="2" fill="#2e7d32"/>
+            <text x="16" y="33" font-size="7" text-anchor="middle" fill="#54595d" font-weight="bold">CHEESE</text>
+          </g>
+        </svg>
+        <div class="infobox-caption">パスタ太郎の食生活の中心にあるパスタ（粉チーズ添え）</div>
+      </div>
+      <table>
+        <tr>
+          <th>名前</th>
+          <td>パスタ太郎</td>
+        </tr>
+        <tr>
+          <th>主な関心</th>
+          <td>パスタ全般</td>
+        </tr>
+        <tr>
+          <th>摂取頻度</th>
+          <td>1日1食以上</td>
+        </tr>
+        <tr>
+          <th>好きなパスタ<br>No.1</th>
+          <td>ボロネーゼパスタ<br>ナポリタン</td>
+        </tr>
+        <tr>
+          <th>必須アイテム</th>
+          <td>粉チーズ</td>
+        </tr>
+        <tr>
+          <th>以前の主食派閥</th>
+          <td>米派（高校3年生まで）</td>
+        </tr>
+        <tr>
+          <th>おすすめ商品</th>
+          <td>ハコネーゼ ボロネーゼソース</td>
+        </tr>
+      </table>
+    </aside>
+
+    <!-- 導入文 -->
+    <p>
+      <strong>パスタ太郎</strong>（パスタたろう）は、パスタに対して強い関心を持つ人物である。1日1食は必ずパスタを食べる生活を送っており、同級生に自身のパスタへの関心を広く知ってもらうことを目的として本項が作成された。
+    </p>
+
+    <!-- 目次 -->
+    <nav class="toc" aria-label="目次">
+      <div class="toc-title">目次</div>
+      <ul>
+        <li><a href="#overview"><span class="toc-num">1</span>概要</a></li>
+        <li><a href="#history"><span class="toc-num">2</span>歴史</a></li>
+        <li><a href="#preferences"><span class="toc-num">3</span>嗜好とこだわり</a></li>
+        <li><a href="#external-factors"><span class="toc-num">4</span>外食環境と市販ソースへの見解</a></li>
+      </ul>
+    </nav>
+
+    <!-- 1. 概要 -->
+    <section id="overview">
+      <h2>1 概要</h2>
+      <p>
+        日常の食事において1日1食はパスタを取り入れている無類のパスタ好きである。王道のパスタ料理からスナック感覚の揚げたパスタまで幅広く親しんでいる。
+      </p>
+      <p>
+        特に「ボロネーゼパスタ」および「ナポリタン」の2種類を好きなパスタのNo.1に挙げている。また、食事の際のトッピングとして粉チーズを極めて重要視している点が特徴である。
+      </p>
+    </section>
+
+    <!-- 2. 歴史 -->
+    <section id="history">
+      <h2>2 歴史</h2>
+      <h3>米派時代</h3>
+      <p>
+        かつては現在ほどパスタに対して強い関心を持っておらず、食事の嗜好としては「米派」に属していた。
+      </p>
+      <h3>覚醒と「パスタ太郎」の誕生</h3>
+      <p>
+        高校3年生の時期を境にパスタの魅力に目覚める。これを契機として主食の軸足がパスタへと移行し、1日1食はパスタを食べる「パスタ太郎」としての現在に至る。
+      </p>
+    </section>
+
+    <!-- 3. 嗜好とこだわり -->
+    <section id="preferences">
+      <h2>3 嗜好とこだわり</h2>
+
+      <!-- 本文内の図解：揚げたパスタ -->
+      <figure class="thumb-right">
+        <svg viewBox="0 0 220 130" role="img" aria-label="揚げたパスタのイラスト">
+          <rect width="220" height="130" fill="#fcfaf5"/>
+          <!-- 小皿 -->
+          <ellipse cx="110" cy="96" rx="78" ry="18" fill="#ffffff" stroke="#b8bec5" stroke-width="1.5"/>
+          <!-- カリッと揚がったパスタスティック -->
+          <line x1="65" y1="92" x2="145" y2="62" stroke="#d99226" stroke-width="4" stroke-linecap="round"/>
+          <line x1="72" y1="98" x2="155" y2="74" stroke="#e5a93b" stroke-width="4" stroke-linecap="round"/>
+          <line x1="60" y1="84" x2="138" y2="88" stroke="#c98018" stroke-width="4" stroke-linecap="round"/>
+          <line x1="80" y1="74" x2="152" y2="95" stroke="#e5a93b" stroke-width="4" stroke-linecap="round"/>
+          <line x1="75" y1="100" x2="148" y2="82" stroke="#d99226" stroke-width="4" stroke-linecap="round"/>
+          <line x1="88" y1="68" x2="135" y2="100" stroke="#f0bc54" stroke-width="4" stroke-linecap="round"/>
+        </svg>
+        <figcaption class="thumb-caption">揚げたパスタ。一般的な茹でパスタだけでなく、こちらも「まあまあおいしい」と評価している。</figcaption>
+      </figure>
+
+      <ul class="wiki-list">
+        <li><strong>好きなパスタNo.1：</strong>ボロネーゼパスタとナポリタンの2トップ体制である。</li>
+        <li><strong>揚げたパスタへの評価：</strong>茹でてソースを絡める調理法だけでなく、揚げたパスタについても「まあまあおいしい」と肯定的に評価している。</li>
+      </ul>
+
+      <div class="notice-box" role="note">
+        <div class="notice-title">粉チーズに関する注意事項</div>
+        パスタを食べる際に<strong>粉チーズがないとキレる</strong>ため、周囲および食事の準備段階においては十分な注意が必要である。
+      </div>
+    </section>
+
+    <!-- 4. 外食環境と市販ソースへの見解 -->
+    <section id="external-factors">
+      <h2>4 外食環境と市販ソースへの見解</h2>
+      <h3>サイゼリヤの価格改定による影響</h3>
+      <p>
+        近年のサイゼリヤにおける値上げは、パスタ太郎にとって非常に痛手となっている。この影響を受け、以前と比較してサイゼリヤへ足を運びパスタを食べる機会は減少傾向にある。
+      </p>
+      <h3>おすすめの市販ソース</h3>
+      <p>
+        市販のパスタソースにおいては、<strong>「ハコネーゼ」のボロネーゼソース</strong>を「めちゃくちゃおすすめ」として高く評価している。
+      </p>
+    </section>
+
+    <!-- カテゴリ -->
+    <div class="categories">
+      <span class="categories-label">カテゴリ:</span>
+      <span class="category-tag">自己紹介</span>
+      <span class="category-tag">パスタ愛好家</span>
+      <span class="category-tag">ボロネーゼ</span>
+      <span class="category-tag">ナポリタン</span>
+      <span class="category-tag">粉チーズ必須</span>
+    </div>
+  </main>
+
+</body>
+</html>
